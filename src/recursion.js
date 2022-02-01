@@ -122,18 +122,88 @@ var palindrome = function(string) {
 // modulo(5,2) // 1
 // modulo(17,5) // 2
 // modulo(22,6) // 4
+//
+let xo, yo
 var modulo = function(x, y) {
-
+  if (y === 0) {
+    return NaN;
+  }
+  if (x === 0) {
+    return 0;
+  }
+  var xNeg = x < 0;
+  if (y < 0) {
+    y = -y;
+  }
+  if (!xNeg && x < y || xNeg && x > -y) {
+    return x
+  } else {
+    if (!xNeg) {
+      x = x - y;
+    }
+    if (xNeg) {
+      var x = x + y;
+    }
+    return modulo(x, y);
+  }
 };
 
 // 12. Write a function that multiplies two numbers without using the * operator or
 // Math methods.
+// I - numbers
+// O - number
+// C - none
+// E - x or y is negative, x or y is 0
 var multiply = function(x, y) {
+  if (x === 0 || y === 0) {
+    return 0;
+  }
+  if (y === 1) {
+    return x;
+  }
+  if (y === -1) {
+    return -x;
+  }
+  if (y < -1) {
+    return -x + multiply(x, y + 1)
+  }
+  if (y > 1) {
+    return x + multiply(x, y - 1);
+  }
+
 };
 
 // 13. Write a function that divides two numbers without using the / operator or
 // Math methods to arrive at an approximate quotient (ignore decimal endings).
+
+// I - numbers
+// O - number
+// C - none
+// E - if x or y is 0, if x or y is negative
 var divide = function(x, y) {
+  var xNeg = x < 0;
+  var yNeg = y < 0;
+  if (y === 0) {
+    return NaN;
+  }
+  if (x === 0) {
+    return 0;
+  }
+  if (y < 0) {
+    y = -y;
+  }
+  if (x < 0) {
+    x = -x;
+  }
+
+  if (x < y) {
+    return 0
+  }
+
+  if ((xNeg && !yNeg) || (!xNeg && yNeg)) {
+    return -1 + divide(x - y, y)
+  }
+  return 1 + divide(x - y, y);
 };
 
 // 14. Find the greatest common divisor (gcd) of two positive numbers. The GCD of two
@@ -148,22 +218,57 @@ var gcd = function(x, y) {
 // both are identical.
 // compareStr('house', 'houses') // false
 // compareStr('tomato', 'tomato') // true
+
+// I - strings
+// O - boolean
+// C - none
+// E - must be a string
+// if str1 and str2 have length of 0
 var compareStr = function(str1, str2) {
-};
+
+  if (str1.length === 0 && str2.length === 0) {
+    return true;
+  }
+  if (str1[0] === str2[0]) {
+    return compareStr(str1.slice(1), str2.slice(1));
+  } else {
+    return false;
+  }
+}
+
 
 // 16. Write a function that accepts a string and creates an array where each letter
 // occupies an index of the array.
 var createArray = function(str) {
+  // if sstr.length === 1
+  if (str.length === 1) {
+    // return [str[0]];
+    return [str[0]];
+  }
+  // return [str[0], ...createArray(str.slice(1))]
+  return [str[0], ...createArray(str.slice(1))];
 };
 
 // 17. Reverse the order of an array
+// [1,2,3,4,5]
 var reverseArr = function(array) {
+  // if array.length === 1
+  if (array.length === 1) {
+    return [array[0]];
+  }
+  return reverseArr(array.slice(1)).concat(array[0])
 };
 
 // 18. Create a new array with a given value and length.
 // buildList(0,5) // [0,0,0,0,0]
 // buildList(7,3) // [7,7,7]
 var buildList = function(value, length) {
+  // if length === 1
+  if (length === 1) {
+    return [value];
+  }
+    // return [value];
+  return [value].concat(buildList(value, length - 1));
 };
 
 // 19. Implement FizzBuzz. Given integer n, return an array of the string representations of 1 to n.
@@ -171,18 +276,50 @@ var buildList = function(value, length) {
 // For multiples of five, output 'Buzz' instead of the number.
 // For numbers which are multiples of both three and five, output “FizzBuzz” instead of the number.
 // fizzBuzz(5) // ['1','2','Fizz','4','Buzz']
+// I - integers
+// O - array of strings
 var fizzBuzz = function(n) {
+  // debugger;
+  if (n === 1) {
+    return ['1'];
+  }
+  if (n % 3 === 0 && n % 5 === 0) {
+    return fizzBuzz(n - 1).concat(['FizzBuzz'])
+  }
+  if (n % 3 === 0) {
+    return fizzBuzz(n - 1).concat(['Fizz'])
+  }
+  if (n % 5 === 0) {
+    return fizzBuzz(n - 1).concat(['Buzz'])
+  }
+  return fizzBuzz(n - 1).concat([n.toString()])
+
+
+
 };
 
 // 20. Count the occurrence of a value in a list.
 // countOccurrence([2,7,4,4,1,4], 4) // 3
 // countOccurrence([2,'banana',4,4,1,'banana'], 'banana') // 2
+// I - array of elements (strings, numbers)
+// O = number
 var countOccurrence = function(array, value) {
+  if (array.length === 0) {
+    return 0;
+  }
+  if (array[0] === value) {
+    return 1 + countOccurrence(array.slice(1), value);
+  }
+  return countOccurrence(array.slice(1), value);
 };
 
 // 21. Write a recursive version of map.
 // rMap([1,2,3], timesTwo); // [2,4,6]
 var rMap = function(array, callback) {
+  if (array.length === 0) {
+    return [];
+  }
+  return [callback(array[0])].concat(rMap(array.slice(1), callback));
 };
 
 // 22. Write a function that counts the number of times a key occurs in an object.
@@ -190,6 +327,16 @@ var rMap = function(array, callback) {
 // countKeysInObj(obj, 'r') // 1
 // countKeysInObj(obj, 'e') // 2
 var countKeysInObj = function(obj, key) {
+  let count = 0;
+  for (var curKey in obj) {
+    if (curKey === key) {
+      count = count + 1;
+    }
+    if (typeof obj[curKey] === 'object') {
+      count = count + countKeysInObj(obj[curKey], key)
+    }
+  }
+  return count;
 };
 
 // 23. Write a function that counts the number of times a value occurs in an object.
@@ -213,15 +360,11 @@ var countValuesInObj = function(obj, value) {
 // them to a provided new name while preserving the value stored at that key.
 var replaceKeysInObj = function(obj, oldKey, newKey) {
   for (const key in obj) {
-    console.log(typeof key, key, oldKey, newKey);
     if (key === oldKey) {
-      console.log("before: ", JSON.stringify(obj))
       obj[newKey] = obj[key];
       delete obj[key];
-      console.log("after: ", JSON.stringify(obj))
     }
     if (typeof obj[key] === 'object') {
-      console.log('key is object')
       replaceKeysInObj(obj[key], oldKey, newKey);
     }
   }
@@ -233,7 +376,15 @@ var replaceKeysInObj = function(obj, oldKey, newKey) {
 // Example: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34.....
 // fibonacci(5); // [0,1,1,2,3,5]
 // Note: The 0 is not counted.
+// I - number
+// O - array of fib numbers
+// C - none
+// E - none
+
+// [0, ]
+
 var fibonacci = function(n) {
+
 };
 
 // 26. Return the Fibonacci number located at index n of the Fibonacci sequence.
